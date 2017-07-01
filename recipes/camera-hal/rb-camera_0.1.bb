@@ -7,10 +7,10 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/\
 ${LICENSE};md5=3775480a712fc46a69647678acb234cb"
 
 FILESPATH =+ "${WORKSPACE}:"
-SRC_URI   = "file://camera/lib"
+SRC_URI   = "file://camera/lib-legacy"
 
 SRCREV = "${AUTOREV}"
-S      = "${WORKDIR}/lib"
+S      = "${WORKDIR}/lib-legacy"
 
 DEPENDS += "media"
 DEPENDS += "glib-2.0"
