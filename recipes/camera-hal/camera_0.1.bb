@@ -1,4 +1,4 @@
-inherit androidmk
+inherit androidmk androidmk-clang
 
 SUMMARY = "Camera libraries and SDK"
 SECTION = "camera"
@@ -74,6 +74,7 @@ do_compile () {
         export DRONE_TARGET=true
     fi
     if [ "${MLPREFIX}" == "lib32-" ]; then
+        use_clang_android
         androidmk_setenv
         export TARGET_SUPPORT_HAL1=false
         oe_runmake -f ${LA_COMPAT_DIR}/build/core/main.mk BUILD_MODULES_IN_PATHS=${S} \
