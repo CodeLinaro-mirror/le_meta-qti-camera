@@ -69,15 +69,14 @@ export TARGET_LIBRARY_SUPPRESS_LIST="libcamera_client libhardware \
         libbinder libgui libstlport libandroid"
 
 do_compile () {
-    # Current support is limited to msm8996 32-bit build
-    #
-    if [ "${MLPREFIX}" == "lib32-" ] || [ "${MACHINE}" == "apq8009-robot" ]; then
+    # Current support is limited to 32-bit build
+    if [ "${MLPREFIX}" == "lib32-" ] || [ "${MLPREFIX}" == "" -a "${TUNE_ARCH}" == "arm" ]; then
         androidmk_setenv
         export TARGET_SUPPORT_HAL1=false
         oe_runmake -f ${LA_COMPAT_DIR}/build/core/main.mk BUILD_MODULES_IN_PATHS=${S} \
             all_modules SHOW_COMMANDS=true || die "make failed"
     else
-        die "not supported"
+        die "64-bit compilation not supported"
     fi
 }
 
