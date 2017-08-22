@@ -1,4 +1,4 @@
-inherit androidmk
+inherit androidmk androidmk-clang
 
 SUMMARY = "Camera libraries and SDK"
 SECTION = "camera"
@@ -17,10 +17,10 @@ DEPENDS += "glib-2.0"
 
 EXTRA_OEMAKE += "TARGET_COMPILE_WITH_MSM_KERNEL=true"
 EXTRA_OEMAKE += "SRC_CAMERA_HAL_DIR='${S}'"
-EXTRA_OEMAKE += "QC_PROP_ROOT='${TMPDIR}'/work/'${MULTIMACH_TARGET_SYS}'/lib32-camerabackend/'${EXTENDPE}${PV}-${PR}'/service"
+EXTRA_OEMAKE += "QC_PROP_ROOT='${TMPDIR}'/work/'${MULTIMACH_TARGET_SYS}'/'${MLPREFIX}'camerabackend/'${EXTENDPE}${PV}-${PR}'/service"
 EXTRA_OEMAKE += "TARGET_IS_HEADLESS=true"
 EXTRA_OEMAKE += "TARGET_USES_AOSP=false"
-EXTRA_OEMAKE += "OMX_HEADER_DIR='${TMPDIR}'/work/'${MULTIMACH_TARGET_SYS}'/lib32-media/'${EXTENDPE}${PV}-${PR}'/hardware/qcom/media/mm-core/inc"
+EXTRA_OEMAKE += "OMX_HEADER_DIR='${TMPDIR}'/work/'${MULTIMACH_TARGET_SYS}'/'${MLPREFIX}'media/'${EXTENDPE}${PV}-${PR}'/hardware/qcom/media/mm-core/inc"
 
 CFLAGS += "-Wno-error -Wno-uninitialized -Wno-error=attributes -Wno-error=unused-parameter"
 CFLAGS += "-Wno-error=builtin-macro-redefined -Wno-error=type-limits"
@@ -68,18 +68,20 @@ export TARGET_LIBRARY_SUPPRESS_LIST="libcamera_client libhardware \
         libbinder libgui libstlport libandroid"
 
 do_compile () {
-    # Current support is limited to msm8996 32-bit build
-    #
     if [ "${PRODUCT}" == "drone" ] && [ "${MACHINE}" == "apq8096" ]; then
         export DRONE_TARGET=true
     fi
-    if [ "${MLPREFIX}" == "lib32-" ]; then
+
+    # Current support is limited to 32-bit build
+    #
+    if [ "${MLPREFIX}" == "lib32-" ] || [ "${MLPREFIX}" == "" -a "${TUNE_ARCH}" == "arm" ]; then
+        use_clang_android
         androidmk_setenv
         export TARGET_SUPPORT_HAL1=false
         oe_runmake -f ${LA_COMPAT_DIR}/build/core/main.mk BUILD_MODULES_IN_PATHS=${S} \
             all_modules SHOW_COMMANDS=true || die "make failed"
     else
-        die "not supported"
+        die "64-bit build not supported"
     fi
 }
 
