@@ -1,4 +1,4 @@
-inherit autotools pkgconfig qlicense
+inherit autotools pkgconfig qlicense sdllvm
 
 DESCRIPTION = "MM Camera libraries for MSM/QSD"
 SECTION  = "camera"
@@ -13,9 +13,13 @@ SRC_DIR = "${WORKSPACE}/camera/lib"
 
 DEPENDS = "glib-2.0 media"
 
-EXTRA_OECONF = "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
+EXTRA_OECONF += "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
 EXTRA_OECONF += "--with-common-includes=${STAGING_INCDIR}"
+
+ENABLE_SDLLVM = "true"
+TARGET_CFLAGS +="${THUMB_FLAGS} ${OPTIONAL_CFLAGS}"
+TARGET_LDFLAGS +="${OPTIONAL_LDFLAGS}"
 
 include camera-${BASEMACHINE}.inc
 
