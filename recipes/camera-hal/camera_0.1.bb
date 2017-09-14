@@ -11,7 +11,7 @@ S      = "${WORKDIR}/lib"
 
 SRC_DIR = "${WORKSPACE}/camera/lib"
 
-DEPENDS = "glib-2.0 media"
+DEPENDS += "glib-2.0 media"
 
 EXTRA_OECONF += "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
@@ -19,7 +19,7 @@ EXTRA_OECONF += "--with-common-includes=${STAGING_INCDIR}"
 
 ENABLE_SDLLVM = "true"
 TARGET_CFLAGS +="${THUMB_FLAGS} ${OPTIONAL_CFLAGS}"
-TARGET_LDFLAGS +="${OPTIONAL_LDFLAGS}"
+TARGET_LDFLAGS +="${OPTIONAL_LDFLAGS} -avoid-version"
 
 include camera-${BASEMACHINE}.inc
 
