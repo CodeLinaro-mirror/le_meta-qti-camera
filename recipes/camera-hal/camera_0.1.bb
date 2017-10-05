@@ -11,7 +11,16 @@ S      = "${WORKDIR}/lib"
 
 SRC_DIR = "${WORKSPACE}/camera/lib"
 
-DEPENDS += "glib-2.0 media"
+DEPENDS += "glib-2.0 "
+
+def get_media_depends(d):
+    if d.getVar('BASEMACHINE', True) == 'apq8098':
+        return "system-media av-frameworks display-hal"
+    else:
+        return "media"
+DEPENDS += "${@get_media_depends(d)}"
+
+
 
 EXTRA_OECONF += "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
@@ -23,7 +32,7 @@ TARGET_LDFLAGS +="${OPTIONAL_LDFLAGS} -avoid-version"
 
 include camera-${BASEMACHINE}.inc
 
-FILES_${PN}-dbg  = "${libdir}/.debug/*"
+FILES_${PN}-dbg  = "${libdir}/.debug/* /usr/bin/.debug/* /usr/lib/hw/.debug/*"
 FILES_${PN}      = "${libdir}/*.so ${libdir}/*.so.* ${sysconfdir}/* ${libdir}/pkgconfig/* ${bindir}/* ${libdir}/hw/*.so"
 FILES_${PN}-dev  = "${libdir}/*.la ${includedir}"
 INSANE_SKIP_${PN} = "dev-so"
