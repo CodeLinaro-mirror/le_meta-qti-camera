@@ -15,10 +15,12 @@ DEPENDS += "glib-2.0 "
 
 def get_media_depends(d):
     if d.getVar('BASEMACHINE', True) == 'apq8098':
-        return "system-media av-frameworks display-hal media"
+        return "system-media av-frameworks display-hal"
     else:
         return "media"
 DEPENDS += "${@get_media_depends(d)}"
+
+
 
 EXTRA_OECONF += "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
