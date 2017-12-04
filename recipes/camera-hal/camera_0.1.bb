@@ -13,9 +13,16 @@ SRC_DIR = "${WORKSPACE}/camera/lib"
 
 DEPENDS += "glib-2.0 media"
 
+def config_camera_debug_data(d):
+    if d.getVar('BASEMACHINE', True) == 'apq8096' and d.getVar('PRODUCT', True) == 'drone':
+        return "CAMERA_DEBUG_DATA=true"
+    else:
+        return ""
+
 EXTRA_OECONF += "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
 EXTRA_OECONF += "--with-common-includes=${STAGING_INCDIR}"
+EXTRA_OECONF += "${@config_camera_debug_data(d)}"
 
 ENABLE_SDLLVM = "true"
 TARGET_CFLAGS +="${THUMB_FLAGS} ${OPTIONAL_CFLAGS}"
