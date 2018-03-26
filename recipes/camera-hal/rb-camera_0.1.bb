@@ -3,15 +3,19 @@ inherit autotools pkgconfig qlicense
 DESCRIPTION = "MM Camera libraries for MSM/QSD"
 SECTION  = "camera"
 
-FILESPATH =+ "${WORKSPACE}:"
-SRC_URI   = "file://camera/lib-legacy"
+FILESPATH =+ "${WORKSPACE}/camera/:"
+SRC_URI   = "file://lib-legacy"
 
 SRCREV = "${AUTOREV}"
 S      = "${WORKDIR}/lib-legacy"
 
 SRC_DIR = "${WORKSPACE}/camera/lib-legacy"
 
-DEPENDS = "media glib-2.0 display-hal-linux"
+DEPENDS = "media av-frameworks glib-2.0 display-hal-linux"
+
+LDFLAGS += " ${@base_contains('DISTRO', 'robot-som', '-lm', '', d)}"
+CPPFLAGS += " ${@base_contains('DISTRO', 'robot-som', '-I${WORKSPACE}/frameworks/native/include/', '', d)}"
+CPPFLAGS += " ${@base_contains('DISTRO', 'robot-som', '-I${WORKSPACE}/hardware/qcom/media/', '', d)}"
 
 EXTRA_OECONF = "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
