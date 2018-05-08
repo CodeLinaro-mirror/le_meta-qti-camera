@@ -27,6 +27,7 @@ EXTRA_OECONF += "${@config_camera_debug_data(d)}"
 ENABLE_SDLLVM = "true"
 TARGET_CFLAGS +="${THUMB_FLAGS} ${OPTIONAL_CFLAGS}"
 TARGET_LDFLAGS +="${OPTIONAL_LDFLAGS} -avoid-version"
+CPPFLAGS += "-I${STAGING_INCDIR}/qcom/display"
 
 include camera-${BASEMACHINE}.inc
 
