@@ -13,12 +13,9 @@ SRC_DIR = "${WORKSPACE}/camera/lib-legacy"
 
 DEPENDS = "media av-frameworks glib-2.0 display-hal-linux"
 
-LDFLAGS += " ${@base_contains('DISTRO', 'robot-som', '-lm', '', d)}"
-CPPFLAGS += " ${@base_contains('DISTRO', 'robot-som', '-I${WORKSPACE}/frameworks/native/include/', '', d)}"
-CPPFLAGS += " ${@base_contains('DISTRO', 'robot-som', '-I${WORKSPACE}/hardware/qcom/media/', '', d)}"
-LDFLAGS += " ${@base_contains('DISTRO', 'robot-som-ros', '-lm', '', d)}"
-CPPFLAGS += " ${@base_contains('DISTRO', 'robot-som-ros', '-I${WORKSPACE}/frameworks/native/include/', '', d)}"
-CPPFLAGS += " ${@base_contains('DISTRO', 'robot-som-ros', '-I${WORKSPACE}/hardware/qcom/media/', '', d)}"
+LDFLAGS_append_robot-som += "-lm"
+CPPFLAGS_append_robot-som += "-I${WORKSPACE}/frameworks/native/include/"
+CPPFLAGS_append_robot-som += "-I${WORKSPACE}/hardware/qcom/media/"
 
 EXTRA_OECONF = "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
