@@ -25,6 +25,8 @@ CPPFLAGS += "-I${WORKSPACE}/hardware/qcom/media/"
 EXTRA_OECONF = "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
 EXTRA_OECONF += "--with-common-includes=${STAGING_INCDIR}"
+EXTRA_OECONF += " --enable-targets-use-libgbm=yes"
+
 
 include rb-camera-apq8009.inc
 
