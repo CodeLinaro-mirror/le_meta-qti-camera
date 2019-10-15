@@ -11,11 +11,16 @@ S      = "${WORKDIR}/lib-legacy"
 
 SRC_DIR = "${WORKSPACE}/camera/lib-legacy"
 
-DEPENDS = "media av-frameworks glib-2.0 display-hal-linux"
+DEPENDS = "media av-frameworks glib-2.0 display-hal-linux libhardware camera-metadata libcutils libutils"
 
 LDFLAGS_append_robot-som += "-lm"
 CPPFLAGS_append_robot-som += "-I${WORKSPACE}/frameworks/native/include/"
 CPPFLAGS_append_robot-som += "-I${WORKSPACE}/hardware/qcom/media/"
+
+LDFLAGS += "-lm"
+CPPFLAGS += "-I${WORKSPACE}/frameworks/native/include/"
+CPPFLAGS += "-I${WORKSPACE}/hardware/qcom/media/"
+
 
 EXTRA_OECONF = "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"

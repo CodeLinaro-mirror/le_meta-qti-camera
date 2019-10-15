@@ -1,8 +1,11 @@
 # Additional non-open source packages to be put to the root filesystem.
 # If product is specified try to include product inc otherwise include base inc.
 def get_camera_inc_file(d):
-    product     = d.getVar('PRODUCT', True)
+    product     = d.getVar('PRODUCT', True) or ''
     basemachine = d.getVar('BASEMACHINE', True)
+    machine     = d.getVar('MACHINE', True) or ''
+    if machine == "open-q-212a-homehub":
+        return "open-q-212a-homehub-camera-image.inc"
     if product != 'base' or '':
         inc_file_name = basemachine + "-camera-" + product + "-image.inc"
     else:
