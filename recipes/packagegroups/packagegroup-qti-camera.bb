@@ -11,11 +11,11 @@ PROVIDES = "${PACKAGES}"
 PACKAGES = ' \
     packagegroup-qti-camera \
     \
-    ${@bb.utils.contains("COMBINED_FEATURES", "qti-camera", bb.utils.contains("MACHINE_FEATURES", "mm-camera", "packagegroup-qti-mm-camera", "", d), "", d)} \
+    ${@bb.utils.contains("COMBINED_FEATURES", "qti-camera", "packagegroup-qti-mm-camera", "", d)} \
     '
 
 RDEPENDS_packagegroup-qti-camera = ' \
-    ${@bb.utils.contains("COMBINED_FEATURES", "qti-camera", bb.utils.contains("MACHINE_FEATURES", "mm-camera", "packagegroup-qti-mm-camera", "", d), "", d)} \
+    ${@bb.utils.contains("COMBINED_FEATURES", "qti-camera", "packagegroup-qti-mm-camera", "", d)} \
     '
 
 RDEPENDS_packagegroup-qti-mm-camera = " \
