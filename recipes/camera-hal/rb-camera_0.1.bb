@@ -1,7 +1,10 @@
-inherit autotools pkgconfig qlicense
+inherit autotools pkgconfig
 
 DESCRIPTION = "MM Camera libraries for MSM/QSD"
 SECTION  = "camera"
+
+LICENSE = "BSD-3-Clause"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/${LICENSE};md5=550794465ba0ec5312d6919e203a55f9"
 
 FILESPATH =+ "${WORKSPACE}/camera/:"
 SRC_URI   = "file://lib-legacy"
@@ -11,7 +14,7 @@ S      = "${WORKDIR}/lib-legacy"
 
 SRC_DIR = "${WORKSPACE}/camera/lib-legacy"
 
-DEPENDS = "media av-frameworks glib-2.0 display-hal-linux libhardware camera-metadata libcutils libutils"
+DEPENDS = "media media-headers glib-2.0 display-hal-linux libhardware libcamera-client camera-metadata libcutils libutils"
 
 LDFLAGS_append_robot-som += "-lm"
 CPPFLAGS_append_robot-som += "-I${WORKSPACE}/frameworks/native/include/"
@@ -25,6 +28,8 @@ CPPFLAGS += "-I${WORKSPACE}/hardware/qcom/media/"
 EXTRA_OECONF = "--with-sanitized-headers=${STAGING_KERNEL_BUILDDIR}/usr/include"
 EXTRA_OECONF += "--with-glib"
 EXTRA_OECONF += "--with-common-includes=${STAGING_INCDIR}"
+EXTRA_OECONF += " --enable-targets-use-libgbm=yes"
+
 
 include rb-camera-apq8009.inc
 
