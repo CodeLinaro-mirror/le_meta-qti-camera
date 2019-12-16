@@ -16,6 +16,8 @@ SRC_DIR = "${WORKSPACE}/camera/lib-legacy"
 
 DEPENDS = "media media-headers glib-2.0 display-hal-linux libhardware libcamera-client camera-metadata libcutils libutils"
 
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 LDFLAGS_append_robot-som += "-lm"
 CPPFLAGS_append_robot-som += "-I${WORKSPACE}/frameworks/native/include/"
 CPPFLAGS_append_robot-som += "-I${WORKSPACE}/hardware/qcom/media/"
