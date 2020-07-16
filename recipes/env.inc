@@ -9,7 +9,16 @@ CAMX_FLAGS               = "-target ${TARGET_SYS} "
 CAMX_FLAGS               += "-I ${STAGING_INCDIR}/c++ "
 OECMAKE_C_FLAGS_append   = "${CAMX_FLAGS}"
 OECMAKE_CXX_FLAGS_append = "${CAMX_FLAGS}"
-TARGET_SYS               = "aarch64-linux-gnu"
+
+
+def config_target_sys(d):
+    if d.getVar('PRODUCT', True) == 'ubuntu':
+        return "aarch64-linux-gnu"
+    else:
+        return "${TARGET_ARCH}${TARGET_VENDOR}${@['-' + d.getVar('TARGET_OS'), ''][d.getVar('TARGET_OS') == ('' or 'custom')]}"
+
+TARGET_SYS = "${@config_target_sys(d)}"
+
 
 def get_platform(d):
     if d.getVar('MACHINE', True) == 'qrb5165-rb5':
