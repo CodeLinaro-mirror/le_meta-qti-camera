@@ -21,7 +21,7 @@ TARGET_SYS = "${@config_target_sys(d)}"
 
 
 def get_platform(d):
-    if d.getVar('MACHINE', True) in ['qrb5165-rb5', 'qrb5165-rb6']:
+    if d.getVar('MACHINE', True) in ['qrb5165']:
         return "kona"
     else:
         return ""
