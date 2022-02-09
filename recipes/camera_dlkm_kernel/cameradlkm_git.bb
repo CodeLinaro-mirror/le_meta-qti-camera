@@ -22,12 +22,12 @@ EXTRA_OEMAKE += "TARGET_SUPPORT=${BASEMACHINE}"
 
 do_compile() {
     cd ${WORKSPACE}/kernel-${PREFERRED_VERSION_linux-msm}/kernel_platform  && \
-    BUILD_CONFIG=msm-kernel/build.config.${BASEMACHINE} \
+    BUILD_CONFIG=msm-kernel/${KERNEL_CONFIG} \
     EXT_MODULES=../../vendor/qcom/opensource/camera-kernel \
     ROOTDIR=${WORKSPACE}/ \
     MODULE_CAMERA=m \
     MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/camera-kernel \
-    OUT_DIR=${WORKSPACE}/kernel-${PREFERRED_VERSION_linux-msm}/out/${BASEMACHINE}/ \
+    OUT_DIR=${KERNEL_PREBUILT_PATH} \
     KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
     INSTALL_MODULE_HEADERS=1 \
     ./build/build_module.sh
