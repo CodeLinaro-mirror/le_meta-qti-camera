@@ -12,8 +12,6 @@ do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 FILESPATH   =+ "${WORKSPACE}:"
 SRC_URI    +=  "file://vendor/qcom/opensource/camera-kernel/"
-SRC_URI    +=  "file://start_camera_le"
-SRC_URI    +=  "file://camera.service"
 SRC_URI    +=  "file://camera_load.conf"
 
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
@@ -34,17 +32,12 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${sysconfdir}/initscripts
-    install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
-    install -m 755 ${WORKDIR}/start_camera_le ${D}${sysconfdir}/initscripts
-    install -d ${D}/usr/lib/modules/
-    install -m 0755 ${WORKDIR}/vendor/qcom/opensource/camera-kernel/camera.ko -D ${D}${libdir}/modules/camera.ko
+    KERNEL_VERSION="${@oe.utils.read_file('${STAGING_KERNEL_BUILDDIR}/kernel-abiversion')}"
+    bbnote "Kernel Version: \"${KERNEL_VERSION}\""
+    install -m 0755 ${WORKDIR}/vendor/qcom/opensource/camera-kernel/camera.ko -D ${D}/${nonarch_base_libdir}/modules/${KERNEL_VERSION}/camera.ko
     install -d ${D}/usr/include/media
-    echo "Staging path -> " ${STAGING_KERNEL_BUILDDIR}
     install -m 0755 ${STAGING_KERNEL_BUILDDIR}/usr/include/camera/media/*.h -D ${D}${includedir}/media/
-    install -m 0644 ${WORKDIR}/camera.service -D ${D}${systemd_unitdir}/system/camera.service
     install -m 0755 ${WORKDIR}/camera_load.conf -D ${D}${sysconfdir}/modules-load.d/camera_load.conf
-    ln -sf ${systemd_unitdir}/system/camera.service ${D}${systemd_unitdir}/system/multi-user.target.wants/camera.service
 }
 
 do_deploy() {
@@ -58,6 +51,4 @@ do_deploy() {
 addtask deploy after do_install before do_package
 
 FILES_${PN} += "${sysconfdir}/*"
-FILES_${PN} += "${systemd_unitdir}/system/camera.service"
-FILES_${PN} += "${systemd_unitdir}/system/multi-user.target.wants/camera.service"
-FILES_${PN} += "${libdir}/modules/*"
+FILES_${PN} += "${nonarch_base_libdir}/modules/*"
