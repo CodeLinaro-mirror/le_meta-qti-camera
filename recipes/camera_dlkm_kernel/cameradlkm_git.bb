@@ -10,6 +10,10 @@ DEPENDS = "rsync-native linux-msm-headers"
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
+# TODO: Remove this local definition once available via machine.conf
+KERNEL_DEFCONFIG ?= "neo_le-defconfig"
+KERNEL_DEFCONFIG_qti-distro-debug ?= "neo_le-debug_defconfig"
+
 FILESPATH   =+ "${WORKSPACE}:"
 SRC_URI    +=  "file://vendor/qcom/opensource/camera-kernel/"
 SRC_URI    +=  "file://kernel-5.10/kernel_platform"
