@@ -6,7 +6,7 @@ inherit linux-kernel-base deploy
 
 PR = "r0"
 
-DEPENDS = "rsync-native linux-msm-headers"
+DEPENDS = "rsync-native linux-msm-headers mmrm-kernel"
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
@@ -23,6 +23,7 @@ SRC_URI    +=  "file://camera_load.conf"
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
 
 EXTRA_OEMAKE += "TARGET_SUPPORT=${BASEMACHINE}"
+KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
 
 do_compile() {
     cd ${WORKDIR}/kernel-5.10/kernel_platform  && \
@@ -34,11 +35,11 @@ do_compile() {
     OUT_DIR=${WORKDIR}/kernel-5.10/out/${KERNEL_DEFCONFIG} \
     KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
     INSTALL_MODULE_HEADERS=1 \
-    ./build/build_module.sh
+    ./build/build_module.sh \
+    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/lib/modules/${KERNEL_VERSION}/Module.symvers
 }
 
 do_install() {
-    KERNEL_VERSION="${@oe.utils.read_file('${STAGING_KERNEL_BUILDDIR}/kernel-abiversion')}"
     bbnote "Kernel Version: \"${KERNEL_VERSION}\""
     install -m 0755 ${WORKDIR}/vendor/qcom/opensource/camera-kernel/camera.ko -D ${D}/${nonarch_base_libdir}/modules/${KERNEL_VERSION}/camera.ko
     install -d ${D}/usr/include/media
