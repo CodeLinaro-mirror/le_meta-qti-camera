@@ -15,7 +15,7 @@ KERNEL_DEFCONFIG ?= "neo_le-defconfig"
 KERNEL_DEFCONFIG_qti-distro-debug ?= "neo_le-debug_defconfig"
 
 FILESPATH   =+ "${WORKSPACE}:"
-SRC_URI    +=  "file://vendor/qcom/opensource/camera-kernel/"
+SRC_URI     =  "file://vendor/qcom/opensource/camera-kernel"
 SRC_URI    +=  "file://kernel-5.10/kernel_platform"
 SRC_URI    +=  "file://kernel-5.10/out/${KERNEL_DEFCONFIG}"
 SRC_URI    +=  "file://camera_load.conf"
