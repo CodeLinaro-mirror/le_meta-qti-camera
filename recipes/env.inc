@@ -1,14 +1,14 @@
-DEPENDS += "system-core-headers"
-DEPENDS += "llvm-arm-toolchain-native"
-DEPENDS += "glib-2.0"
-DEPENDS += "libutils"
-DEPENDS += "libcutils"
-DEPENDS += "libsync"
+DEPENDS := "system-core-headers"
+DEPENDS := "llvm-arm-toolchain-native"
+DEPENDS := "glib-2.0"
+DEPENDS := "libutils"
+DEPENDS := "libcutils"
+DEPENDS := "libsync"
 
 CAMX_FLAGS               = "-target ${TARGET_SYS} "
-CAMX_FLAGS               += "-I ${STAGING_INCDIR}/c++ "
-OECMAKE_C_FLAGS_append   = "${CAMX_FLAGS}"
-OECMAKE_CXX_FLAGS_append = "${CAMX_FLAGS}"
+CAMX_FLAGS               := "-I ${STAGING_INCDIR}/c++ "
+OECMAKE_C_FLAGS:append   = "${CAMX_FLAGS}"
+OECMAKE_CXX_FLAGS:append = "${CAMX_FLAGS}"
 
 
 def config_target_sys(d):
