@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/${LICENSE};md5
 inherit linux-kernel-base deploy
 PR = "r0"
 
-DEPENDS += "virtual/kernel mmrm-kernel"
+DEPENDS += "virtual/kernel"
 
 FILESEXTRAPATHS:prepend := "${WORKSPACE}:"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/"
