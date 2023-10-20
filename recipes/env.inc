@@ -23,6 +23,9 @@ TARGET_SYS = "${@config_target_sys(d)}"
 def get_platform(d):
     if d.getVar('MACHINE', True) == 'qrb5165-rb5':
         return "kona"
+    #IFB platform build support
+    if (d.getVar('MACHINE', True) == 'qrb5165-ifb') :
+        return "kona"
     else:
         return ""
 
