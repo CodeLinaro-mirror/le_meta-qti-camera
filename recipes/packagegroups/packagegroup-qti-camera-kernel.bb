@@ -13,5 +13,6 @@ PACKAGES = ' \
 '
 
 RDEPENDS_packagegroup-qti-camera-kernel = ' \
-    ${@bb.utils.contains("COMBINED_FEATURES", "qti-camera", "cameradlkm", "", d)} \
+    cameradlkm \
 '
+DEPENDS += " cameradevicetree"

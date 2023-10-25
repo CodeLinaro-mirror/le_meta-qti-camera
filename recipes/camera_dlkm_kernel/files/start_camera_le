@@ -41,6 +41,16 @@ case "$1" in
     insmod $MODULE_BASE/camera.ko
 
     echo "done loading camera_kernel module"
+
+	timeperiod=0
+	until [ -d /sys/kernel/qts/primary ] || [ $timeperiod -gt 20 ]
+	do
+		sleep 0.1
+		((timeperiod++))
+	done
+	chown -h system:system /sys/kernel/qts/primary/trusted_*
+	chown -h system:system /sys/kernel/qts/secondary/trusted_*
+
     ;;
     stop)
     echo -n "Bypassing Unloading of camera_kernel modules "
