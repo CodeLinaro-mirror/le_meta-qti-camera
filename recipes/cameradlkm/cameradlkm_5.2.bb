@@ -57,5 +57,5 @@ do_deploy() {
 
 addtask deploy after do_install before do_package
 
-FILES_${PN} += "${sysconfdir}/*"
-FILES_${PN} += "${nonarch_base_libdir}/modules/*"
+FILES:${PN} += "${sysconfdir}/*"
+FILES:${PN} += "${nonarch_base_libdir}/modules/*"
