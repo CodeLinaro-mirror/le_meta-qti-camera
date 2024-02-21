@@ -12,6 +12,6 @@ PACKAGES = ' \
     packagegroup-qti-camera-kernel \
 '
 
-RDEPENDS_packagegroup-qti-camera-kernel = ' \
+RDEPENDS:packagegroup-qti-camera-kernel = ' \
     ${@bb.utils.contains("COMBINED_FEATURES", "qti-camera", "cameradlkm", "", d)} \
 '

@@ -1,6 +1,6 @@
 DESCRIPTION = "QTI Camera drivers"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
+LICENSE = "GPL-2.0-only"
+LIC_FILES_CHKSUM = "file://${COREBASE}/meta-qti-bsp/files/common-licenses/${LICENSE};md5=801f80980d171dd6425610833a22dbe6"
 
 inherit linux-kernel-base deploy
 
@@ -57,5 +57,5 @@ do_deploy() {
 
 addtask deploy after do_install before do_package
 
-FILES_${PN} += "${sysconfdir}/*"
-FILES_${PN} += "${nonarch_base_libdir}/modules/*"
+FILES:${PN} += "${sysconfdir}/*"
+FILES:${PN} += "${nonarch_base_libdir}/modules/*"
