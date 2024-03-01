@@ -8,7 +8,7 @@ DEPENDS += "virtual/kernel mmrm-kernel"
 
 FILESEXTRAPATHS:prepend := "${WORKSPACE}:"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/"
-
+SRC_URI += "file://vendor/qcom/opensource/camera-kernel/camera-kernel.rules"
 
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
 
@@ -40,6 +40,7 @@ do_install() {
 
     install -d ${D}/usr/include/media
     install -m 0755 ${B}/include/uapi/camera/media/*.h -D ${D}${includedir}/media/
+    install -m 0644 ${S}/camera-kernel.rules -D ${D}${sysconfdir}/udev/rules.d/camera-kernel.rules
 
 }
 
