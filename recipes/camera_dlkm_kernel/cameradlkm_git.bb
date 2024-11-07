@@ -4,42 +4,46 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/${LICENSE};md5
 inherit linux-kernel-base deploy
 PR = "r0"
 
-DEPENDS += "virtual/kernel"
+DEPENDS += "virtual/kernel securemsmdlkm-headers"
+DEPENDS += "mmrm-kernel"
 
 FILESEXTRAPATHS:prepend := "${WORKSPACE}:"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/"
-
-
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
-
 KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
+
 EXT_MODULES = "${@os.path.relpath("${S}", "${KERNEL_PLATFORM_PATH}")}"
+INTERMEDIAT_KERNEL_PATH = "${WORKDIR}/out/${KERNEL_DEFCONFIG}"
 
 do_configure[noexec] = "1"
 
-do_compile[depends] += "virtual/kernel:do_shared_workdir"
-do_compile[cleandirs] += "${WORKDIR}/out/${KERNEL_DEFCONFIG}"
+do_compile[cleandirs] += "${INTERMEDIAT_KERNEL_PATH}"
 do_compile() {
+    ## cflag for extra include directory ##
+    LE_EXTRA_CFLAGS="-I${STAGING_DIR_HOST}/usr/include -I${STAGING_DIR_HOST}/usr/include/linux"
+
+    ## compile module ##
     cd ${KERNEL_PLATFORM_PATH}
+
+    LE_EXTRA_CFLAGS="${LE_EXTRA_CFLAGS}" \
     BUILD_CONFIG=msm-kernel/${KERNEL_CONFIG} \
     EXT_MODULES=${EXT_MODULES} \
     KERNEL_KIT=${KERNEL_PREBUILT_PATH} \
-    OUT_DIR=${WORKDIR}/out/${KERNEL_DEFCONFIG} \
+    OUT_DIR=${INTERMEDIAT_KERNEL_PATH} \
     INPLACE_COMPILE=y \
     KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
     MODULE_CAMERA=m \
     ./build/build_module.sh \
-    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/lib/modules/${KERNEL_VERSION}/Module.symvers
+    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/lib/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers
 }
 
 do_install() {
     install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}
     install -m 0755 ${B}/camera.ko -D ${D}${base_libdir}/modules/${KERNEL_VERSION}
-
     install -m 0755 ${B}/Module.symvers -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/camera-kernel/Module.symvers
-
     install -d ${D}/usr/include/media
     install -m 0755 ${B}/include/uapi/camera/media/*.h -D ${D}${includedir}/media/
+#    install -m 0644 ${S}/camera-kernel.rules -D ${D}${sysconfdir}/udev/rules.d/camera-kernel.rules
 
 }
 
