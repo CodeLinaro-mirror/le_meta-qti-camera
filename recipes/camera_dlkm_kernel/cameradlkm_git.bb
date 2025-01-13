@@ -6,6 +6,7 @@ PR = "r0"
 
 DEPENDS += "virtual/kernel securemsmdlkm-headers"
 DEPENDS += "mmrm-kernel"
+DEPENDS += "synx-kernel synx-kernel-header"
 
 FILESEXTRAPATHS:prepend := "${WORKSPACE}:"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/"
@@ -25,6 +26,7 @@ do_compile() {
     ## compile module ##
     cd ${KERNEL_PLATFORM_PATH}
 
+    KBUILD_OPTIONS+="TARGET_SYNX_ENABLE=y" \
     LE_EXTRA_CFLAGS="${LE_EXTRA_CFLAGS}" \
     BUILD_CONFIG=msm-kernel/${KERNEL_CONFIG} \
     EXT_MODULES=${EXT_MODULES} \
@@ -34,7 +36,8 @@ do_compile() {
     KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
     MODULE_CAMERA=m \
     ./build/build_module.sh \
-    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/lib/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers
+    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/lib/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers \
+    KBUILD_EXTRA_SYMBOLS+=${WORKDIR}/recipe-sysroot/lib/modules/${KERNEL_VERSION}/synx-kernel/Module.symvers
 }
 
 do_install() {
