@@ -28,8 +28,7 @@ do_compile() {
     INPLACE_COMPILE=y \
     KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
     MODULE_CAMERA=m \
-    ./build/build_module.sh \
-    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/lib/modules/${KERNEL_VERSION}/Module.symvers
+    ./build/build_module.sh
 }
 
 do_install() {
