@@ -37,8 +37,8 @@ do_install() {
 
     install -m 0755 ${B}/Module.symvers -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/camera-kernel/Module.symvers
 
-    install -d ${D}/usr/include/media
-    install -m 0755 ${B}/include/uapi/camera/media/*.h -D ${D}${includedir}/media/
+    install -d ${D}/usr/include/camera/media
+    install -m 0755 ${B}/include/uapi/camera/media/*.h -D ${D}${includedir}/camera/media/
 
 }
 
