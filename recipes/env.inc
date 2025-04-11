@@ -25,6 +25,8 @@ def get_platform(d):
         return "kona"
     elif d.getVar('MACHINE', True) == 'qcm2290-mtp':
         return "bengal"
+    elif d.getVar('BASEMACHINE', True) == 'qcm4325-mtp':
+        return "bengal"
     else:
         return ""
 
