@@ -10,6 +10,8 @@ DEFAULT_PREFERENCE = "-1"
 FILESPATH   =+ "${WORKSPACE}:"
 SRC_URI     =  "file://vendor/qcom/opensource/camera-kernel"
 SRC_URI    +=  "file://camera_load.conf"
+SRC_URI    +=  "file://camera.service"
+SRC_URI    +=  "file://start_camera_le"
 
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
 
@@ -26,12 +28,20 @@ KERNEL_CC = "${STAGING_BINDIR_NATIVE}/clang/bin/clang -target ${TARGET_ARCH}${TA
 MAKE_TARGETS = "modules"
 
 do_install() {
+    install -d ${D}${sysconfdir}/initscripts \
+    ${D}${systemd_unitdir}/system/multi-user.target.wants/ \
+    ${D}${includedir}/linux
+
     install -d ${D}${includedir}/media/
     install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}/
     install -d ${D}${sysconfdir}/
     install -m 0755 ${WORKDIR}/camera_load.conf -D ${D}${sysconfdir}/modules-load.d/camera_load.conf
     install -m 0755 ${S}/camera.ko -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/
     install -m 0644 ${S}/include/uapi/camera/media/*.h -D ${D}${includedir}/media/
+
+    install -m 755 ${WORKDIR}/start_camera_le ${D}${sysconfdir}/initscripts
+    install -m 0644 ${WORKDIR}/camera.service -D ${D}${systemd_unitdir}/system/camera.service
+    ln -sf ${systemd_unitdir}/system/camera.service ${D}${systemd_unitdir}/system/multi-user.target.wants/camera.service
 }
 
 FILES:${PN} = "${sysconfdir}/*"
