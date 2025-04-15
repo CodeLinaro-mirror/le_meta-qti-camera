@@ -1,0 +1,32 @@
+#! /bin/sh
+# Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# Load camera-kernel module
+set -e
+
+case "$1" in
+    start)
+    echo -n "Starting/Loading camera kernel module: "
+
+    echo "camera_kernel:start/load" > /dev/kmsg
+    modprobe camera
+    echo "done loading camera module"
+    ;;
+    stop)
+    echo -n "Bypassing Unloading of camera modules "
+    ;;
+    restart)
+    $0 stop
+    $0 start
+    ;;
+    *)
+    echo "Usage { start | stop | restart}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0
+
+
+
