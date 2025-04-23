@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/${LICENSE};md5
 inherit linux-kernel-base deploy
 PR = "r0"
 
-DEPENDS += "virtual/kernel securemsmdlkm-headers"
+DEPENDS += "virtual/kernel securemsmdlkm-headers cameradlkm-headers"
 DEPENDS += "mmrm-kernel"
 DEPENDS += "synx-kernel synx-kernel-header"
 
@@ -44,8 +44,6 @@ do_install() {
     install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}
     install -m 0755 ${B}/camera.ko -D ${D}${base_libdir}/modules/${KERNEL_VERSION}
     install -m 0755 ${B}/Module.symvers -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/camera-kernel/Module.symvers
-    install -d ${D}/usr/include/media
-    install -m 0755 ${B}/include/uapi/camera/media/*.h -D ${D}${includedir}/media/
     install -d ${D}/usr/include/dt-bindings
     install -m 0755 ${B}/dt-bindings/*.h -D ${D}${includedir}/dt-bindings/
 #    install -m 0644 ${S}/camera-kernel.rules -D ${D}${sysconfdir}/udev/rules.d/camera-kernel.rules
