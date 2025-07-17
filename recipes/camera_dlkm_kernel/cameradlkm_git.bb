@@ -32,18 +32,19 @@ do_compile() {
     EXT_MODULES=${EXT_MODULES} \
     KERNEL_KIT=${KERNEL_PREBUILT_PATH} \
     OUT_DIR=${INTERMEDIAT_KERNEL_PATH} \
+    MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/camera-kernel \
     INPLACE_COMPILE=y \
     KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
     MODULE_CAMERA=m \
     ./build/build_module.sh \
-    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/lib/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers \
-    KBUILD_EXTRA_SYMBOLS+=${WORKDIR}/recipe-sysroot/lib/modules/${KERNEL_VERSION}/synx-kernel/Module.symvers
+    KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/usr/lib/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers \
+    KBUILD_EXTRA_SYMBOLS+=${WORKDIR}/recipe-sysroot/usr/lib/modules/${KERNEL_VERSION}/synx-kernel/Module.symvers
 }
 
 do_install() {
     install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}
     install -m 0755 ${B}/camera.ko -D ${D}${base_libdir}/modules/${KERNEL_VERSION}
-    install -m 0755 ${B}/Module.symvers -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/camera-kernel/Module.symvers
+    install -m 0755 ${B}/Module.symvers -D ${D}/${base_libdir}/modules/${KERNEL_VERSION}/camera-kernel/Module.symvers
     install -d ${D}/usr/include/dt-bindings
     install -m 0755 ${B}/dt-bindings/*.h -D ${D}${includedir}/dt-bindings/
 #    install -m 0644 ${S}/camera-kernel.rules -D ${D}${sysconfdir}/udev/rules.d/camera-kernel.rules
