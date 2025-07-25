@@ -33,8 +33,8 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}
-    install -m 0755 ${B}/camera.ko -D ${D}${base_libdir}/modules/${KERNEL_VERSION}
+    install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}
+    install -m 0755 ${B}/camera.ko -D ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}
 
     install -m 0755 ${B}/Module.symvers -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/camera-kernel/Module.symvers
 
@@ -44,7 +44,8 @@ do_install() {
 }
 
 FILES:${PN} += "${sysconfdir}/*"
-FILES:${PN} += "${base_libdir}/modules/${KERNEL_VERSION}/*"
+FILES:${PN} += "${nonarch_base_libdir}/modules/${KERNEL_VERSION}/*"
+FILES:${PN} += "${base_libdir}/modules/${KERNEL_VERSION}/camera-kernel/Module.symvers"
 
 do_deploy() {
     install -d ${DEPLOYDIR}/kernel_modules
