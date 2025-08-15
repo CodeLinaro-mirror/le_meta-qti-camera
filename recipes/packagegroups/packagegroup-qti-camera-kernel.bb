@@ -15,4 +15,5 @@ PACKAGES = ' \
 
 RDEPENDS:packagegroup-qti-camera-kernel = ' \
     cameradlkm \
+    cameradtb \
 '
