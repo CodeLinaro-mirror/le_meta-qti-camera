@@ -26,7 +26,7 @@ do_compile() {
     EXT_MODULES=${EXT_MODULES} \
     ENABLE_DDK_BUILD=${DDK_BUILD} \
     TARGET_BOARD_PLATFORM=${BASEMACHINE}-le \
-    VARIANT=${KERNEL_DEFCONFIG_VARIANT} \
+    VARIANT=${KERNEL_VARIANT} \
     OUT_DIR=${KERNEL_OUT_PATH}/ \
     MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/camera-kernel \
     ./build/build_module.sh
