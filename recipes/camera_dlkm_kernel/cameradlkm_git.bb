@@ -3,8 +3,14 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/${LICENSE};md5=801f80980d171dd6425610833a22dbe6"
 inherit linux-kernel-base deploy
 PR = "r0"
+
+#####Add for DDK
+DDK_BUILD ?= "false"
 DEPENDS += "${@bb.utils.contains('DDK_BUILD', 'false', \
-    'virtual/kernel securemsmdlkm-headers cameradlkm-headers mmrm-kernel synx-kernel synx-kernel-header', '', d)}"
+    'virtual/kernel securemsmdlkm-headers cameradlkm-headers mmrm-kernel synx-kernel synx-kernel-header', \
+    'virtual/kernel mmrm-kernel synx-kernel synx-kernel-header', d)}"
+OVERRIDES:append = "${@':ddk_build' if d.getVar('DDK_BUILD') == 'true' else ''}"
+
 FILESEXTRAPATHS:prepend := "${WORKSPACE}:"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/"
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
@@ -16,14 +22,13 @@ do_compile[cleandirs] += "${INTERMEDIAT_KERNEL_PATH}"
 do_compile() {
     ## cflag for extra include directory ##
     LE_EXTRA_CFLAGS="-I${STAGING_DIR_HOST}/usr/include -I${STAGING_DIR_HOST}/usr/include/linux"
+
     ## compile module ##
     cd ${KERNEL_PLATFORM_PATH}
-    ENABLE_DDK_BUILD=${DDK_BUILD} \
-    TARGET_BOARD_PLATFORM=${TARGET_BOARD_PLATFORM} \
-    VARIANT=${KERNEL_DEFCONFIG_VARIANT} \
+
     KBUILD_OPTIONS+="TARGET_SYNX_ENABLE=y" \
     LE_EXTRA_CFLAGS="${LE_EXTRA_CFLAGS}" \
-    BUILD_CONFIG=${KERNEL_BUILD_CONFIG} \
+    BUILD_CONFIG=msm-kernel/${KERNEL_CONFIG} \
     EXT_MODULES=${EXT_MODULES} \
     KERNEL_KIT=${KERNEL_PREBUILT_PATH} \
     OUT_DIR=${INTERMEDIAT_KERNEL_PATH} \
@@ -34,6 +39,24 @@ do_compile() {
     ./build/build_module.sh \
     KBUILD_EXTRA_SYMBOLS=${STAGING_DIR_HOST}/usr/lib/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers \
     KBUILD_EXTRA_SYMBOLS+=${WORKDIR}/recipe-sysroot/usr/lib/modules/${KERNEL_VERSION}/synx-kernel/Module.symvers
+}
+
+#####Add for DDK
+do_compile:ddk_build() {
+
+    ## compile module ##
+    cd ${KERNEL_PLATFORM_PATH}
+
+    ENABLE_DDK_BUILD=${DDK_BUILD} \
+    TARGET_BOARD_PLATFORM=${TARGET_BOARD_PLATFORM} \
+    VARIANT=${KERNEL_DEFCONFIG_VARIANT} \
+    BUILD_CONFIG=${KERNEL_BUILD_CONFIG} \
+    EXT_MODULES=${EXT_MODULES} \
+    KERNEL_KIT=${KERNEL_PREBUILT_PATH} \
+    OUT_DIR=${INTERMEDIAT_KERNEL_PATH} \
+    MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/camera-kernel \
+    ./build/build_module.sh
+
 }
 do_install() {
     install -d ${D}${base_libdir}/modules/${KERNEL_VERSION}
