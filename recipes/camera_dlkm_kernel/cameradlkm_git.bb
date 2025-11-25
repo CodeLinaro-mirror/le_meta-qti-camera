@@ -20,6 +20,7 @@ INTERMEDIAT_KERNEL_PATH = "${WORKDIR}/out/${KERNEL_DEFCONFIG}"
 do_configure[noexec] = "1"
 
 do_compile[cleandirs] += "${INTERMEDIAT_KERNEL_PATH}"
+do_compile[lockfiles] = "${TMPDIR}/build_modules.lock"
 do_compile() {
     cd ${WORKSPACE}/kernel-${PREFERRED_VERSION_linux-msm}/kernel_platform  && \
     BUILD_CONFIG=${KERNEL_BUILD_CONFIG} \
