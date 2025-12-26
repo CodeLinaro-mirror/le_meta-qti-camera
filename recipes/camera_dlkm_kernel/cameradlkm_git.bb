@@ -18,6 +18,7 @@ KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
 EXT_MODULES = "${@os.path.relpath("${S}", "${KERNEL_PLATFORM_PATH}")}"
 INTERMEDIAT_KERNEL_PATH = "${WORKDIR}/out/${KERNEL_DEFCONFIG}"
 do_configure[noexec] = "1"
+do_compile[network] = "1"
 do_compile[cleandirs] += "${INTERMEDIAT_KERNEL_PATH}"
 do_compile() {
     ## cflag for extra include directory ##
