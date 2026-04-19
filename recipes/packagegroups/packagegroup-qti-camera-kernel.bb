@@ -1,6 +1,6 @@
 SUMMARY = "QTI Camera Kernel Package Group"
 
-LICENSE = "BSD-3-clause-clear"
+LICENSE = "BSD-3-Clause"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -13,5 +13,5 @@ PACKAGES = ' \
 '
 
 RDEPENDS:packagegroup-qti-camera-kernel = ' \
-    ${@bb.utils.contains("COMBINED_FEATURES", "qti-camera", "cameradlkm", "", d)} \
+      ${@'cameradlkm' if d.getVar('BASEMACHINE') == 'seraph' else bb.utils.contains("COMBINED_FEATURES", "qti-camera", "cameradlkm", "", d)} \
 '
