@@ -9,6 +9,10 @@ DEPENDS += "virtual/kernel "
 #DEPENDS += "mmrm-kernel"
 #DEPENDS += "synx-kernel synx-kernel-header"
 
+DDK_BUILD ?= "false"
+
+OVERRIDES:append = "${@':ddk_build' if d.getVar('DDK_BUILD') == 'true' else ''}"
+
 FILESEXTRAPATHS:prepend := "${WORKSPACE}:"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/"
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
@@ -18,7 +22,7 @@ EXT_MODULES = "${@os.path.relpath("${S}", "${KERNEL_PLATFORM_PATH}")}"
 INTERMEDIAT_KERNEL_PATH = "${WORKDIR}/out/${KERNEL_DEFCONFIG}"
 
 do_configure[noexec] = "1"
-
+do_compile[network] = "1"
 do_compile[cleandirs] += "${INTERMEDIAT_KERNEL_PATH}"
 do_compile[lockfiles] = "${TMPDIR}/build_modules.lock"
 do_compile() {
@@ -31,6 +35,23 @@ do_compile() {
     OUT_DIR=${KERNEL_OUT_PATH}/ \
     MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/camera-kernel \
     ./build/build_module.sh
+}
+
+do_compile:ddk_build() {
+
+    ## compile module ##
+    cd ${KERNEL_PLATFORM_PATH}
+
+    ENABLE_DDK_BUILD=${DDK_BUILD} \
+    TARGET_BOARD_PLATFORM=${TARGET_BOARD_PLATFORM} \
+    VARIANT=${KERNEL_DEFCONFIG_VARIANT} \
+    BUILD_CONFIG=${KERNEL_BUILD_CONFIG} \
+    EXT_MODULES=${EXT_MODULES} \
+    KERNEL_KIT=${KERNEL_PREBUILT_PATH} \
+    OUT_DIR=${INTERMEDIAT_KERNEL_PATH} \
+    MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/camera-kernel \
+    ./build/build_module.sh
+
 }
 
 do_install() {
