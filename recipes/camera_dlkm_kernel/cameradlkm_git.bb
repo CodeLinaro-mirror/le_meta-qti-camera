@@ -50,6 +50,15 @@ do_install() {
 #    install -m 0644 ${S}/camera-kernel.rules -D ${D}${sysconfdir}/udev/rules.d/camera-kernel.rules
 }
 
+do_install:append() {
+    install -d ${D}${sysconfdir}/udev/rules.d
+
+    cat > ${D}${sysconfdir}/udev/rules.d/camera-kernel.rules <<'EOF'
+ACTION=="add", SUBSYSTEM=="video4linux", KERNEL=="video*", DRIVERS=="cam_req_mgr", TAG+="systemd"
+EOF
+}
+
+FILES:${PN}:append = " ${sysconfdir}/udev/rules.d/camera-kernel.rules"
 FILES:${PN} += "${sysconfdir}/*"
 FILES:${PN} += "${base_libdir}/modules/${KERNEL_VERSION}/*"
 FILES:${PN} += "${includedir}/*"
