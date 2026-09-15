@@ -1,4 +1,4 @@
-inherit module
+inherit module ${@'deploy' if 'seraph' in (d.getVar('BASEMACHINE') or '').split(':') else ''}
 
 HOMEPAGE         = "https://git.codelinaro.org"
 LICENSE          = "GPLv2.0-with-linux-syscall-note"
@@ -16,9 +16,15 @@ SRC_URI    +=  "file://start_camera_le"
 S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
 
 EXTRA_OEMAKE += "STAGING_INCDIR=${STAGING_INCDIR}"
+EXTRA_OEMAKE:append:seraph = " SOC_REPO=${KERNEL_PLATFORM_PATH}/${KERNEL_SRC_TYPE}/"
+EXTRA_OEMAKE:append:seraph = " EXTRA_CFLAGS+=-I${STAGING_INCDIR}"
+EXTRA_OEMAKE:append:seraph = " EXTRA_CFLAGS+=-I${STAGING_INCDIR}/linux"
 
 DEPENDS = "rsync-native linux-msm-headers kernel-module-mmrm-kernel kernel-module-synx-kernel kernel-module-fastrpc-kernel libsynx"
 DEPENDS += "synx-kernel-header"
+DEPENDS:remove:seraph = " kernel-module-mmrm-kernel"
+DEPENDS:append:seraph = " kernel-module-soc-repo"
+
 DEPENDS:append:aarch64 = " libgcc"
 RPROVIDES:${PN} += "kernel-module-camera-${KERNEL_VERSION}"
 KERNEL_MODULES = "camera"
@@ -44,5 +50,18 @@ do_install() {
     ln -sf ${systemd_unitdir}/system/camera.service ${D}${systemd_unitdir}/system/multi-user.target.wants/camera.service
 }
 
-FILES:${PN} = "${sysconfdir}/*"
+python __anonymous() {
+    if 'seraph' in (d.getVar('BASEMACHINE') or '').split(':'):
+        bb.build.addtask("do_deploy", "do_package", "do_install", d)
+}
+
+do_deploy() {
+# Deploy unstripped kernel modules into ${DEPLOYDIR}/kernel_modules for debugging purposes
+    install -d ${DEPLOYDIR}/kernel_modules
+    for kmod in $(find ${D} -name "*.ko") ; do
+        install -m 0644 $kmod ${DEPLOYDIR}/kernel_modules
+    done
+}
+
+FILES:${PN} += "${sysconfdir}/*"
 FILES:${PN} += "${base_libdir}/*"
