@@ -11,7 +11,7 @@ SRC_URI =+ "file://camx-ext"
 
 include ../env.inc
 
-S = "${WORKDIR}/camx-ext"
+S = "${UNPACKDIR}/camx-ext"
 
 FILES_${PN}        += "${libdir}/*.so"
 FILES_${PN}-dbg    += "${libdir}/.debug/"

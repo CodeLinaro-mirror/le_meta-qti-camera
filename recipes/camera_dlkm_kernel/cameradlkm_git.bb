@@ -10,7 +10,7 @@ FILESEXTRAPATHS:prepend := "${WORKSPACE}:"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/"
 SRC_URI += "file://vendor/qcom/opensource/camera-kernel/camera-kernel.rules"
 
-S = "${WORKDIR}/vendor/qcom/opensource/camera-kernel"
+S = "${UNPACKDIR}/vendor/qcom/opensource/camera-kernel"
 
 KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
 EXT_MODULES = "${@os.path.relpath("${S}", "${KERNEL_PLATFORM_PATH}")}"
